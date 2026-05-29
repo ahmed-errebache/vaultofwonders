@@ -90,3 +90,14 @@ struct Component1: View {
         .padding()
         .background(Color(.systemGray6))
 }
+
+
+
+
+if selectedTab == .home {
+    HomeView()
+} else if selectedTab == .chance {
+    OddsView()
+} else if selectedTab == .collection {
+    CollectionView()
+}
