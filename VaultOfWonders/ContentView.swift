@@ -6,19 +6,24 @@
 //
 
 import SwiftUI
-
 struct ContentView: View {
+    @State var selectedTab: BottomBarSelectedTab = .home
+    
     var body: some View {
         VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+            if selectedTab == .home {
+                Text("Vault Of Wonders")
+                    .font(.largeTitle)
+                    .bold()
+                    .padding()
+            } else if selectedTab == .chance {
+                Text("Chance")
+            } else if selectedTab == .collection {
+                Text("Collection")
+            }
+            Spacer()
+            BottomBar(selectedTab: $selectedTab)
         }
-        .padding()
     }
 }
-
-#Preview {
-    ContentView()
-}
+ 
