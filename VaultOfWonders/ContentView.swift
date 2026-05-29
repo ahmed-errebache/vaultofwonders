@@ -7,7 +7,7 @@
 
 import SwiftUI
 struct ContentView: View {
-    @State var selectedTab: BottomBarSelectedTab = .home
+    @State var selectedTab: AppTab = .home
     
     var body: some View {
         VStack {
@@ -22,7 +22,7 @@ struct ContentView: View {
                 Text("Collection")
             }
             Spacer()
-            BottomBar(selectedTab: $selectedTab)
+            Component1(selectedTab: $selectedTab)
         }
     }
 }
