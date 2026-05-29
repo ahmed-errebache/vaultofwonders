@@ -6,19 +6,24 @@
 //
 
 import SwiftUI
-
 struct ContentView: View {
+    @State var selectedTab: AppTab = .home
+    
     var body: some View {
         VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+            if selectedTab == .home {
+                Text("Vault Of Wonders")
+                    .font(.largeTitle)
+                    .bold()
+                    .padding()
+            } else if selectedTab == .chance {
+                Text("Chance")
+            } else if selectedTab == .collection {
+                Text("Collection")
+            }
+            Spacer()
+            Component1(selectedTab: $selectedTab)
         }
-        .padding()
     }
 }
-
-#Preview {
-    ContentView()
-}
+ 
