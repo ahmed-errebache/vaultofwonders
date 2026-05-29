@@ -71,12 +71,7 @@ struct Component1: View {
                         .font(.system(size: 13, weight: .bold))
                         .foregroundStyle(isSelected ? .blue : .gray)
 
-                    if isSelected {
-                        Circle()
-                            .fill(.blue)
-                            .frame(width: 7, height: 7)
-                            .offset(x: 8, y: -11)
-                    }
+                    
                 }
             }
             .frame(maxWidth: .infinity)
@@ -94,10 +89,4 @@ struct Component1: View {
 
 
 
-if selectedTab == .home {
-    HomeView()
-} else if selectedTab == .chance {
-    OddsView()
-} else if selectedTab == .collection {
-    CollectionView()
-}
+
