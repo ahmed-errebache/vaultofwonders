@@ -42,6 +42,7 @@ class PlayerUIView: UIView {
     func setPlayer(_ player: AVPlayer) {
         playerLayer.player = player
         playerLayer.videoGravity = .resizeAspectFill
+        playerLayer.backgroundColor = UIColor.clear.cgColor
         backgroundColor = .clear
     }
 

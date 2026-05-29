@@ -1,6 +1,87 @@
 import SwiftUI
 
+// MARK: - Collection Store
+
+class CollectionStore: ObservableObject {
+    @Published var counts: [String: Int] = [:]
+    private let key = "collection_counts"
+
+    init() {
+        counts = UserDefaults.standard.dictionary(forKey: key) as? [String: Int] ?? [:]
+    }
+
+    func add(cards: [Rarity]) {
+        for card in cards {
+            counts[card.name, default: 0] += 1
+        }
+        UserDefaults.standard.set(counts, forKey: key)
+    }
+
+    func count(for rarity: Rarity) -> Int {
+        counts[rarity.name, default: 0]
+    }
+}
+
+// MARK: - Collection View
+
+struct CollectionView: View {
+    @EnvironmentObject var store: CollectionStore
+    let columns = [GridItem(.flexible()), GridItem(.flexible())]
+
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 20) {
+                Text("Ma collection :")
+                    .font(.title).bold()
+                    .padding(.horizontal)
+
+                LazyVGrid(columns: columns, spacing: 16) {
+                    ForEach(allRarities) { rarity in
+                        let count = store.count(for: rarity)
+                        VStack(spacing: 10) {
+                            ZStack {
+                                RoundedRectangle(cornerRadius: 10)
+                                    .fill((count > 0 ? rarity.color : Color.gray).opacity(0.45))
+                                    .frame(width: 46, height: 58)
+                                    .rotationEffect(.degrees(-14))
+                                    .offset(x: -10, y: 5)
+                                RoundedRectangle(cornerRadius: 10)
+                                    .fill(count > 0 ? rarity.color : Color.gray.opacity(0.3))
+                                    .frame(width: 46, height: 58)
+                                    .rotationEffect(.degrees(10))
+                                    .offset(x: 8, y: -4)
+                            }
+                            .frame(width: 90, height: 72)
+
+                            Text(rarity.name)
+                                .font(.system(size: 15, weight: .semibold))
+                                .foregroundColor(.primary)
+
+                            Text("×\(count)")
+                                .font(.system(size: 20, weight: .bold))
+                                .foregroundColor(count > 0 ? rarity.color : .gray.opacity(0.4))
+                        }
+                        .padding(.vertical, 18)
+                        .frame(maxWidth: .infinity)
+                        .background(
+                            RoundedRectangle(cornerRadius: 18)
+                                .fill(Color.white)
+                                .shadow(color: .black.opacity(0.08), radius: 8, x: 0, y: 3)
+                        )
+                    }
+                }
+                .padding(.horizontal)
+            }
+            .padding(.top, 24)
+        }
+        .background(Color(.systemGray6).ignoresSafeArea())
+    }
+}
+
+// MARK: - Content View
+
 struct ContentView: View {
+    @EnvironmentObject var store: CollectionStore
     @State var selectedTab: AppTab = .home
     @State var showPopup: Bool = false
     @State var showCards: Bool = false
@@ -9,6 +90,8 @@ struct ContentView: View {
 
     var body: some View {
         ZStack {
+
+            // --- Contenu principal (toujours rendu, flou pendant l'ouverture) ---
             VStack {
                 if selectedTab == .home {
                     Text("Vault Of Wonders")
@@ -17,14 +100,18 @@ struct ContentView: View {
                         .padding()
 
                     if !showPopup {
-                        // --- État initial ---
+                        VideoPlayerView(name: "money", isPlaying: false)
+                            .frame(width: 320, height: 320)
+                            .clipShape(RoundedRectangle(cornerRadius: 20))
+                            .padding(.top, 20)
+
                         Button {
                             drawnCards = (0..<3).map { _ in drawRarity() }
+                                .sorted { $0.percent > $1.percent }
                             showPopup = true
                             DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
                                 showCards = true
-                                // 0.5s après la fin de la dernière carte (délai 1.4s + durée 0.2s)
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 2.1) {
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 2.4) {
                                     withAnimation(.easeIn(duration: 0.3)) {
                                         showButton = true
                                     }
@@ -39,56 +126,68 @@ struct ContentView: View {
                                 .background(Color.orange)
                                 .cornerRadius(12)
                         }
-
-                        ZStack {
-                            RoundedRectangle(cornerRadius: 20)
-                                .stroke(Color.gray.opacity(0.4), lineWidth: 2)
-                            VideoPlayerView(name: "money", isPlaying: false)
-                                .clipShape(RoundedRectangle(cornerRadius: 20))
-                        }
-                        .frame(width: 320, height: 320)
                         .padding(.top, 20)
+                    }
 
-                    } else {
-                        // --- État ouvert ---
-                        ZStack(alignment: .top) {
+                } else if selectedTab == .chance {
+                    ChanceView()
+                } else if selectedTab == .collection {
+                    CollectionView()
+                }
 
-                            // Vidéo en bas du ZStack
-                            VideoPlayerView(name: "money", isPlaying: true)
-                                .frame(width: 320, height: 300)
-                                .clipShape(RoundedRectangle(cornerRadius: 20))
-                                .padding(.top, 120)
+                Spacer()
+                Component1(selectedTab: $selectedTab)
+            }
 
-                            // Cartes qui sortent du coffre vers le haut
-                            HStack(spacing: 14) {
-                                ForEach(Array(drawnCards.enumerated()), id: \.offset) { i, card in
-                                    VStack(spacing: 6) {
-                                        RoundedRectangle(cornerRadius: 12)
-                                            .fill(card.color)
-                                            .frame(width: 85, height: 110)
-                                            .shadow(color: card.color.opacity(0.5), radius: 8, y: 4)
-                                        Text(card.name)
-                                            .font(.system(size: 11, weight: .bold))
-                                            .foregroundColor(card.color)
-                                    }
-                                    .opacity(showCards ? 1 : 0)
-                                    .offset(
-                                        x: showCards ? 0 : CGFloat(1 - i) * 99,
-                                        y: showCards ? 0 : 206
-                                    )
-                                    .animation(
-                                        .easeOut(duration: 0.2)
-                                        .delay(Double(i) * 0.7),
-                                        value: showCards
-                                    )
+            // --- Fond flou pendant l'ouverture ---
+            if showPopup {
+                Rectangle()
+                    .fill(.ultraThinMaterial)
+                    .ignoresSafeArea()
+                    .transition(.opacity)
+            }
+
+            // --- Animation d'ouverture au-dessus du flou ---
+            if showPopup {
+                ZStack {
+                    // Coffre + cartes centrés, layout fixe
+                    ZStack(alignment: .top) {
+                        VideoPlayerView(name: "money", isPlaying: true)
+                            .frame(width: 320, height: 300)
+                            .padding(.top, 120)
+
+                        HStack(spacing: 14) {
+                            ForEach(Array(drawnCards.enumerated()), id: \.offset) { i, card in
+                                VStack(spacing: 6) {
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .fill(card.color)
+                                        .frame(width: 85, height: 110)
+                                        .shadow(color: card.color.opacity(0.5), radius: 8, y: 4)
+                                    Text(card.name)
+                                        .font(.system(size: 11, weight: .bold))
+                                        .foregroundColor(card.color)
                                 }
+                                .opacity(showCards ? 1 : 0)
+                                .offset(
+                                    x: showCards ? 0 : CGFloat(1 - i) * 99,
+                                    y: showCards ? 0 : 206
+                                )
+                                .animation(
+                                    .easeOut(duration: 0.2)
+                                    .delay(i < 2 ? Double(i) * 0.7 : 1.7),
+                                    value: showCards
+                                )
                             }
                         }
-                        .frame(width: 320)
-                        .padding(.top, 8)
+                    }
+                    .frame(width: 320)
 
-                        if showButton {
+                    // Bouton en bas, indépendant du layout coffre/cartes
+                    if showButton {
+                        VStack {
+                            Spacer()
                             Button {
+                                store.add(cards: drawnCards)
                                 showPopup = false
                                 showCards = false
                                 showButton = false
@@ -102,20 +201,10 @@ struct ContentView: View {
                                     .background(Color.orange)
                                     .cornerRadius(12)
                             }
-                            .padding(.top, 16)
+                            .padding(.bottom, 60)
                         }
                     }
-
-                } else if selectedTab == .chance {
-                    ChanceView()
-                } else if selectedTab == .collection {
-                    Text("Collection")
-                        .font(.largeTitle).bold().padding()
                 }
-
-                Spacer()
-
-                Component1(selectedTab: $selectedTab)
             }
         }
     }

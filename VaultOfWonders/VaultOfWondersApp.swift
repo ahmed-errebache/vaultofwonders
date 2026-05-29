@@ -9,9 +9,12 @@ import SwiftUI
 
 @main
 struct VaultOfWondersApp: App {
+    @StateObject var store = CollectionStore()
+
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(store)
         }
     }
 }
