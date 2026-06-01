@@ -1,4 +1,5 @@
 import SwiftUI
+import Combine
 
 class CollectionStore: ObservableObject {
     @Published var counts: [String: Int] = [:]
