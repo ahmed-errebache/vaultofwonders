@@ -11,23 +11,25 @@ struct Component1: View {
 
     var body: some View {
         HStack(spacing: 0) {
+            
+
+            navItem(
+                tab: .chance,
+                title: "Chance",
+                systemImage: "dice.fill"
+            )
+            
             navItem(
                 tab: .home,
                 title: "Accueil",
                 systemImage: "house.fill"
             )
-
-            navItem(
-                tab: .chance,
-                title: "Chance",
-                systemImage: "shippingbox.fill"
-            )
-
+            
             navItem(
                 tab: .collection,
                 title: "Collection",
-                systemImage: "rectangle.stack.fill"
-            )
+                systemImage: "square.stack.fill"
+            ).rotationEffect(30.0.sign.rawValue == .zero ? .degrees(0) : .degrees(180))
         }
         .padding(.horizontal, 18)
         .padding(.vertical, 12)
@@ -63,7 +65,7 @@ struct Component1: View {
                     Image(systemName: systemImage)
                         .font(.system(size: isSelected ? 25 : 20, weight: .bold))
                         .foregroundStyle(isSelected ? .blue : .gray)
-                        .rotationEffect(tab == .collection ? .degrees(-12) : .degrees(0))
+                        
                 }
 
                 HStack(spacing: 0) {
