@@ -2,7 +2,6 @@ import SwiftUI
 import WebKit
 import ImageIO
 
-// Affiche le GIF animé
 struct GIFImageView: UIViewRepresentable {
     let name: String
 
@@ -23,7 +22,6 @@ struct GIFImageView: UIViewRepresentable {
     }
 }
 
-// Affiche uniquement la première frame du GIF (statique)
 struct GIFFirstFrameView: UIViewRepresentable {
     let name: String
 

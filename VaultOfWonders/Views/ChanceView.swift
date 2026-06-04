@@ -75,7 +75,3 @@ private struct StackedCards: View {
         }
     }
 }
-
-#Preview {
-    ChanceView()
-}

@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct CollectionView: View {
-    @EnvironmentObject var store: CollectionStore
+    @EnvironmentObject var collectionVM: CollectionViewModel
     let columns = [GridItem(.flexible()), GridItem(.flexible())]
 
     var body: some View {
@@ -13,7 +13,7 @@ struct CollectionView: View {
 
                 LazyVGrid(columns: columns, spacing: 16) {
                     ForEach(allRarities) { rarity in
-                        let count = store.count(for: rarity)
+                        let count = collectionVM.count(for: rarity)
                         VStack(spacing: 10) {
                             ZStack {
                                 RoundedRectangle(cornerRadius: 10)
