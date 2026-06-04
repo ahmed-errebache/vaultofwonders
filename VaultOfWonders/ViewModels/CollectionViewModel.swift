@@ -1,7 +1,7 @@
 import SwiftUI
 import Combine
 
-class CollectionStore: ObservableObject {
+class CollectionViewModel: ObservableObject {
     @Published var counts: [String: Int] = [:]
     private let key = "collection_counts"
 

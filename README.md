@@ -1,93 +1,272 @@
 # VaultOfWonders
 
+VaultOfWonders permet à l'utilisateur d'ouvrir des packs de cartes virtuels. Chaque ouverture révèle 3 cartes de raretés aléatoires, avec des probabilités de drop différentes selon la rareté. Les cartes obtenues sont ajoutées à une collection persistante.
 
+---
 
-## Getting started
-
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
-
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
-
-## Add your files
-
-* [Create](https://docs.gitlab.com/user/project/repository/web_editor/#create-a-file) or [upload](https://docs.gitlab.com/user/project/repository/web_editor/#upload-a-file) files
-* [Add files using the command line](https://docs.gitlab.com/topics/git/add_files/#add-files-to-a-git-repository) or push an existing Git repository with the following command:
+## Architecture
 
 ```
-cd existing_repo
-git remote add origin https://gitlab.univ-lorraine.fr/e71455u/vaultofwonders.git
-git branch -M main
-git push -uf origin main
+VaultOfWonders/
+├── Models/
+│   └── Rarity.swift
+├── ViewModels/
+│   ├── CollectionViewModel.swift
+│   └── HomeViewModel.swift
+├── Views/
+│   ├── RootView.swift
+│   ├── HomeView.swift
+│   ├── CollectionView.swift
+│   ├── ChanceView.swift
+│   └── Components/
+│       ├── TabBarView.swift
+│       └── PackOpeningView.swift
+├── Utils/
+│   ├── VideoPlayerView.swift
+│   ├── GIFImageView.swift
+│   ├── SVGAnimationView.swift
+│   └── Constants.swift
+└── VaultOfWondersApp.swift
 ```
 
-## Integrate with your tools
+---
 
-* [Set up project integrations](https://gitlab.univ-lorraine.fr/e71455u/vaultofwonders/-/settings/integrations)
+## Fonctionnement général
 
-## Collaborate with your team
+```
+Utilisateur appuie "Ouvrir"
+  → HomeViewModel tire 3 raretés aléatoires
+  → Animation : coffre s'ouvre (vidéo MP4), cartes apparaissent une par une
+  → Utilisateur appuie "Recevoir"
+  → Les cartes sont sauvegardées dans la collection (UserDefaults)
+  → CollectionView se met à jour automatiquement
+```
 
-* [Invite team members and collaborators](https://docs.gitlab.com/user/project/members/)
-* [Create a new merge request](https://docs.gitlab.com/user/project/merge_requests/creating_merge_requests/)
-* [Automatically close issues from merge requests](https://docs.gitlab.com/user/project/issues/managing_issues/#closing-issues-automatically)
-* [Enable merge request approvals](https://docs.gitlab.com/user/project/merge_requests/approvals/)
-* [Set auto-merge](https://docs.gitlab.com/user/project/merge_requests/auto_merge/)
+---
 
-## Test and Deploy
+## Description des fichiers
 
-Use the built-in continuous integration in GitLab.
+### Point d'entrée
 
-* [Get started with GitLab CI/CD](https://docs.gitlab.com/ci/quick_start/)
-* [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/user/application_security/sast/)
-* [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/topics/autodevops/requirements/)
-* [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/user/clusters/agent/)
-* [Set up protected environments](https://docs.gitlab.com/ci/environments/protected_environments/)
+#### `VaultOfWondersApp.swift`
+Point de démarrage de l'application (`@main`). Instancie le `CollectionViewModel` une seule fois et le rend accessible à toutes les vues via `.environmentObject()`. Lance `RootView` comme vue initiale.
 
-***
+---
 
-# Editing this README
+### Models
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+#### `Models/Rarity.swift`
 
-## Suggestions for a good README
+Définit la structure de données fondamentale du jeu.
 
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+**`struct Rarity`**
+Représente une rareté de carte.
+| Propriété | Type | Description |
+|---|---|---|
+| `id` | `UUID` | Identifiant unique (requis par `Identifiable`) |
+| `name` | `String` | Nom affiché ("Commune", "Rare"...) |
+| `percent` | `Int` | Probabilité de drop en % |
+| `color` | `Color` | Couleur associée à la rareté |
 
-## Name
-Choose a self-explaining name for your project.
+**`allRarities`**
+Tableau global des 5 raretés disponibles :
+| Rareté | Probabilité | Couleur |
+|---|---|---|
+| Commune | 50% | Gris |
+| Rare | 30% | Rouge |
+| Épique | 15% | Violet |
+| Légendaire | 4% | Orange |
+| Mythique | 1% | Cyan |
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+**`func drawRarity() -> Rarity`**
+Simule un tirage aléatoire. Tire un nombre entre 1 et 100 et le compare aux probabilités cumulées pour retourner la rareté correspondante.
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+---
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+### ViewModels
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+#### `ViewModels/CollectionViewModel.swift`
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+Gère l'état de la collection de l'utilisateur. Hérite de `ObservableObject` — toute modification de `counts` déclenche automatiquement une mise à jour de l'interface.
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+**Propriétés**
+| Propriété | Type | Description |
+|---|---|---|
+| `counts` | `[String: Int]` | Nombre de cartes possédées par rareté |
+| `key` | `String` | Clé UserDefaults pour la persistance |
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+**Méthodes**
+| Méthode | Description |
+|---|---|
+| `init()` | Charge les données sauvegardées depuis `UserDefaults` |
+| `add(cards: [Rarity])` | Incrémente le compteur de chaque rareté reçue et sauvegarde |
+| `count(for: Rarity) -> Int` | Retourne le nombre de cartes possédées pour une rareté donnée |
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+---
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+#### `ViewModels/HomeViewModel.swift`
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+Gère toute la logique d'ouverture de pack et l'état de l'animation. Hérite de `ObservableObject`.
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+**Propriétés publiées**
+| Propriété | Type | Description |
+|---|---|---|
+| `showPopup` | `Bool` | Indique si l'overlay d'ouverture est visible |
+| `showCards` | `Bool` | Indique si les cartes tirées sont affichées |
+| `drawnCards` | `[Rarity]` | Les 3 cartes tirées lors de l'ouverture |
+| `showButton` | `Bool` | Indique si le bouton "Recevoir" est visible |
 
-## License
-For open source projects, say how it is licensed.
+**Méthodes**
+| Méthode | Description |
+|---|---|
+| `openPack()` | Tire 3 raretés, les trie, puis déclenche la séquence d'animation via des délais asynchrones |
+| `collectCards(into: CollectionViewModel)` | Envoie les cartes au CollectionViewModel et réinitialise tous les états |
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+**Séquence de `openPack()`**
+```
+t+0.0s  → showPopup = true  (overlay s'ouvre, fond flouté)
+t+2.0s  → showCards = true  (les 3 cartes apparaissent avec animation)
+t+2.4s  → showButton = true (le bouton "Recevoir" apparaît en fondu)
+```
+
+---
+
+### Views
+
+#### `Views/RootView.swift`
+
+Vue racine de l'application. Gère la navigation entre onglets et l'affichage de l'overlay d'ouverture de pack.
+
+Structure en `ZStack` :
+1. `VStack` contenant la vue de l'onglet actif + la `TabBarView`
+2. Rectangle flouté (`.ultraThinMaterial`) affiché si `showPopup`
+3. `PackOpeningView` affiché si `showPopup`
+
+Crée le `HomeViewModel` via `@StateObject` et le transmet aux vues enfants.
+
+---
+
+#### `Views/HomeView.swift`
+
+Écran d'accueil (onglet Accueil). Vue purement déclarative, sans logique.
+
+Affiche :
+- Le titre "Vault Of Wonders"
+- La vidéo du coffre (en pause)
+- Le bouton "Ouvrir" (déclenche `vm.openPack()`)
+
+Reçoit le `HomeViewModel` en `@ObservedObject` depuis `RootView`.
+
+---
+
+#### `Views/CollectionView.swift`
+
+Écran de collection (onglet Collection). Affiche une grille 2 colonnes de toutes les raretés.
+
+Pour chaque rareté :
+- **Possédée** (count > 0) : couleur vive, nombre affiché en gras
+- **Non possédée** (count = 0) : grisé, ×0 affiché
+
+Lit les données via `@EnvironmentObject var collectionVM: CollectionViewModel`.
+
+---
+
+#### `Views/ChanceView.swift`
+
+Écran des probabilités (onglet Chances). Vue informative, aucune interaction.
+
+Affiche chaque rareté avec son pourcentage de drop dans une grille 2 colonnes.
+
+Composants internes privés :
+- **`RarityCell`** : cellule individuelle (nom + % + icône cartes)
+- **`StackedCards`** : représentation visuelle de deux cartes empilées
+
+---
+
+#### `Views/Components/TabBarView.swift`
+
+Barre de navigation personnalisée en bas de l'écran (forme capsule).
+
+Contient l'enum `AppTab` définissant les 3 onglets :
+```swift
+enum AppTab {
+    case home
+    case chance
+    case collection
+}
+```
+
+Reçoit `selectedTab` en `@Binding` depuis `RootView`. Chaque onglet change visuellement quand il est sélectionné (fond bleu + icône agrandie).
+
+---
+
+#### `Views/Components/PackOpeningView.swift`
+
+Overlay d'animation affiché lors de l'ouverture d'un pack. S'affiche par-dessus tout l'écran.
+
+Affiche :
+- La vidéo du coffre en lecture (`isPlaying: true`)
+- Les 3 cartes tirées avec animation d'apparition décalée
+- Le bouton "Recevoir" (déclenche le callback `onCollect`)
+
+Reçoit le `HomeViewModel` en `@ObservedObject` et un callback `onCollect: () -> Void` depuis `RootView`.
+
+---
+
+### Utils
+
+#### `Utils/VideoPlayerView.swift`
+
+Wrapper SwiftUI autour de `AVPlayer` pour la lecture de fichiers `.mp4`.
+
+| Paramètre | Description |
+|---|---|
+| `name` | Nom du fichier vidéo (sans extension) |
+| `isPlaying` | `true` pour lire, `false` pour mettre en pause et revenir au début |
+
+La vidéo est muette (`isMuted = true`) et se redémarre depuis le début à chaque lecture.
+
+---
+
+#### `Utils/GIFImageView.swift`
+
+Wrapper SwiftUI pour afficher des GIFs animés via `WKWebView`.
+
+- **`GIFImageView`** : affiche le GIF en animation complète
+- **`GIFFirstFrameView`** : affiche uniquement la première frame (image statique)
+
+---
+
+#### `Utils/SVGAnimationView.swift`
+
+Wrapper SwiftUI pour afficher et contrôler des animations SVG via `WKWebView`.
+
+| Paramètre | Description |
+|---|---|
+| `name` | Nom du fichier SVG (sans extension) |
+| `isPlaying` | Contrôle si l'animation SVG est en lecture ou en pause |
+
+Utilise JavaScript (`pauseAnimations()` / `unpauseAnimations()`) pour contrôler l'état de l'animation.
+
+---
+
+#### `Utils/Constants.swift`
+
+Utilitaires globaux partagés.
+
+- **`SafeAreaManager`** : singleton pour accéder aux marges de la safe area
+- **Extension `UIDevice`** : propriétés statiques `isIPad` et `isIPhone` pour détecter le type d'appareil
+
+---
+
+## Persistance des données
+
+La collection est sauvegardée dans `UserDefaults` sous la clé `"collection_counts"` au format `[String: Int]` (nom de rareté → nombre de cartes). Les données persistent entre les sessions.
+
+---
+
+## Assets
+
+| Fichier | Usage |
+|---|---|
+| `money.mp4` | Animation du coffre qui s'ouvre |
