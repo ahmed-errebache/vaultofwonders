@@ -1,32 +1,10 @@
 # VaultOfWonders
 
-Application iOS de simulation d'ouverture de packs de cartes, développée en SwiftUI selon l'architecture **MVVM** (Model-View-ViewModel).
-
----
-
-## Aperçu
-
 VaultOfWonders permet à l'utilisateur d'ouvrir des packs de cartes virtuels. Chaque ouverture révèle 3 cartes de raretés aléatoires, avec des probabilités de drop différentes selon la rareté. Les cartes obtenues sont ajoutées à une collection persistante.
 
 ---
 
-## Prérequis
-
-- Xcode 16 ou supérieur
-- iOS 17 ou supérieur
-- Swift 5
-
----
-
 ## Architecture
-
-Le projet suit le pattern **MVVM** (Model-View-ViewModel) :
-
-| Couche | Rôle |
-|---|---|
-| **Model** | Définit les données brutes du jeu |
-| **ViewModel** | Contient la logique métier et l'état de l'interface |
-| **View** | Affiche les données, ne contient aucune logique |
 
 ```
 VaultOfWonders/
@@ -292,9 +270,3 @@ La collection est sauvegardée dans `UserDefaults` sous la clé `"collection_cou
 | Fichier | Usage |
 |---|---|
 | `money.mp4` | Animation du coffre qui s'ouvre |
-
----
-
-## Auteurs
-
-Projet réalisé dans le cadre d'un cours de développement iOS — IUT Saint-Dié-des-Vosges.
