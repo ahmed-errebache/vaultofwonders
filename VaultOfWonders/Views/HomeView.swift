@@ -14,9 +14,8 @@ struct HomeView: View {
             if !vm.showPopup {
                 TokenCounter(text: tokenVM.tokenCountText)
 
-                VideoPlayerView(name: "money", isPlaying: false)
+                ChestVideoView(isPlaying: false)
                     .frame(width: 320, height: 320)
-                    .clipShape(RoundedRectangle(cornerRadius: 20))
                     .padding(.top, 20)
 
                 Button {

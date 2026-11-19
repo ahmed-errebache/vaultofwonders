@@ -7,25 +7,27 @@ struct PackOpeningView: View {
     var body: some View {
         ZStack {
             ZStack(alignment: .top) {
-                VideoPlayerView(name: "money", isPlaying: true)
+                ChestVideoView(isPlaying: true)
                     .frame(width: 320, height: 300)
-                    .padding(.top, 120)
+                    .padding(.top, 140)
 
                 HStack(spacing: 14) {
                     ForEach(Array(vm.drawnCards.enumerated()), id: \.offset) { i, card in
                         VStack(spacing: 6) {
-                            RoundedRectangle(cornerRadius: 12)
-                                .fill(card.color)
+                            FlipCardView(rarity: card, isFaceUp: vm.isRevealed(index: i))
                                 .frame(width: 85, height: 110)
-                                .shadow(color: card.color.opacity(0.5), radius: 8, y: 4)
+
+                            // Le nom n'apparaît qu'une fois la carte retournée.
                             Text(card.name)
                                 .font(.system(size: 11, weight: .bold))
                                 .foregroundColor(card.color)
+                                .opacity(vm.isRevealed(index: i) ? 1 : 0)
+                                .animation(.easeIn(duration: 0.3), value: vm.revealedCount)
                         }
                         .opacity(vm.showCards ? 1 : 0)
                         .offset(
                             x: vm.showCards ? 0 : CGFloat(1 - i) * 99,
-                            y: vm.showCards ? 0 : 206
+                            y: vm.showCards ? 0 : 226
                         )
                         .animation(
                             .easeOut(duration: 0.2)
@@ -52,6 +54,13 @@ struct PackOpeningView: View {
                     .padding(.bottom, 60)
                 }
             }
+        }
+        // Vibration à chaque carte retournée, plus marquée pour une carte spéciale.
+        .sensoryFeedback(trigger: vm.revealedCount) { _, newCount in
+            guard newCount > 0, let card = vm.lastRevealedCard else {
+                return nil
+            }
+            return card.isSpecial ? .success : .impact
         }
     }
 }

@@ -48,4 +48,28 @@ final class RarityTests: XCTestCase {
             XCTAssertTrue(knownNames.contains(drawer.drawRarity().name))
         }
     }
+
+    func testNextRarityAfterCommuneIsRare() {
+        XCTAssertEqual(nextRarity(after: allRarities[0])?.name, "Rare")
+    }
+
+    func testNextRarityAfterLegendaireIsMythique() {
+        XCTAssertEqual(nextRarity(after: allRarities[3])?.name, "Mythique")
+    }
+
+    func testMythiqueHasNoNextRarity() {
+        XCTAssertNil(nextRarity(after: allRarities[4]))
+    }
+
+    func testOnlyLegendaireAndMythiqueAreSpecial() {
+        let specialNames = allRarities.filter { $0.isSpecial }.map { $0.name }
+
+        XCTAssertEqual(specialNames, ["Légendaire", "Mythique"])
+    }
+
+    func testEveryRarityHasASymbol() {
+        for rarity in allRarities {
+            XCTAssertFalse(rarity.symbol.isEmpty)
+        }
+    }
 }

@@ -20,7 +20,7 @@ struct TabBarView: View {
         .padding(.horizontal, 18)
         .padding(.vertical, 12)
         .frame(height: 82)
-        .background(.white)
+        .background(Color(.secondarySystemGroupedBackground))
         .clipShape(Capsule())
         .shadow(color: .black.opacity(0.14), radius: 18, x: 0, y: 10)
         .padding(.horizontal, 24)

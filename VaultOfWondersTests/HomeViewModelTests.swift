@@ -65,4 +65,60 @@ final class HomeViewModelTests: XCTestCase {
         XCTAssertFalse(viewModel.showButton)
         XCTAssertEqual(viewModel.drawnCards.count, 0)
     }
+
+    // MARK: - Révélation des cartes
+
+    func testNoCardIsRevealedRightAfterOpening() {
+        let viewModel = HomeViewModel(drawer: MockRarityDrawer(rarities: [commune, rare, mythique]))
+
+        viewModel.openPack()
+
+        XCTAssertEqual(viewModel.revealedCount, 0)
+        XCTAssertFalse(viewModel.isRevealed(index: 0))
+        XCTAssertNil(viewModel.lastRevealedCard)
+    }
+
+    func testRevealNextCardRevealsCardsOneByOne() {
+        let viewModel = HomeViewModel(drawer: MockRarityDrawer(rarities: [commune, rare, mythique]))
+        viewModel.openPack()
+
+        viewModel.revealNextCard()
+
+        XCTAssertTrue(viewModel.isRevealed(index: 0))
+        XCTAssertFalse(viewModel.isRevealed(index: 1))
+        XCTAssertEqual(viewModel.lastRevealedCard?.name, "Commune")
+    }
+
+    func testLastRevealedCardFollowsTheReveal() {
+        let viewModel = HomeViewModel(drawer: MockRarityDrawer(rarities: [commune, rare, mythique]))
+        viewModel.openPack()
+
+        viewModel.revealNextCard()
+        viewModel.revealNextCard()
+        viewModel.revealNextCard()
+
+        XCTAssertEqual(viewModel.lastRevealedCard?.name, "Mythique")
+    }
+
+    func testRevealNextCardNeverGoesPastTheDrawnCards() {
+        let viewModel = HomeViewModel(drawer: MockRarityDrawer(rarities: [commune, rare, mythique]))
+        viewModel.openPack()
+
+        for _ in 0..<10 {
+            viewModel.revealNextCard()
+        }
+
+        XCTAssertEqual(viewModel.revealedCount, 3)
+    }
+
+    func testCollectCardsHidesRevealedCards() {
+        let viewModel = HomeViewModel(drawer: MockRarityDrawer(rarities: [commune, rare, mythique]))
+        let collection = CollectionViewModel(store: InMemoryCollectionStore())
+        viewModel.openPack()
+        viewModel.revealNextCard()
+
+        viewModel.collectCards(into: collection)
+
+        XCTAssertEqual(viewModel.revealedCount, 0)
+    }
 }
