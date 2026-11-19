@@ -15,8 +15,9 @@ let allRarities: [Rarity] = [
     Rarity(name: "Mythique",   percent:  1, color: Color(red: 0.08, green: 0.78, blue: 0.92)),
 ]
 
-func drawRarity() -> Rarity {
-    let roll = Int.random(in: 1...100)
+// Règle du tirage, sans hasard : à un nombre de 1 à 100 correspond une rareté.
+// 1...50 = Commune, 51...80 = Rare, 81...95 = Épique, 96...99 = Légendaire, 100 = Mythique.
+func rarity(forRoll roll: Int) -> Rarity {
     var cumulative = 0
     for rarity in allRarities {
         cumulative += rarity.percent

@@ -1,14 +1,22 @@
 import SwiftUI
 import Combine
 
-class HomeViewModel: ObservableObject {
+@MainActor
+final class HomeViewModel: ObservableObject {
     @Published var showPopup = false
     @Published var showCards = false
     @Published var drawnCards: [Rarity] = []
     @Published var showButton = false
+    private let drawer: RarityDrawing
+
+    // Le tirage est injecté : l'application utilise le hasard par défaut,
+    // les tests passent un MockRarityDrawer pour choisir les cartes.
+    init(drawer: RarityDrawing = RandomRarityDrawer()) {
+        self.drawer = drawer
+    }
 
     func openPack() {
-        drawnCards = (0..<3).map { _ in drawRarity() }
+        drawnCards = (0..<3).map { _ in drawer.drawRarity() }
             .sorted { $0.percent > $1.percent }
         showPopup = true
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [weak self] in
