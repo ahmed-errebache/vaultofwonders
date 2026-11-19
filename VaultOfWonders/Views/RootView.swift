@@ -12,6 +12,8 @@ struct RootView: View {
                     HomeView(vm: homeVM)
                 } else if selectedTab == .chance {
                     ChanceView()
+                } else if selectedTab == .machine {
+                    MachineView()
                 } else if selectedTab == .collection {
                     CollectionView()
                 }
