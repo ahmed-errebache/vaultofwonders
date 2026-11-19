@@ -24,8 +24,6 @@ struct CollectionView: View {
                             Text("×\(count)")
                                 .font(.system(size: 20, weight: .bold))
                                 .foregroundColor(count > 0 ? rarity.color : .gray.opacity(0.4))
-
-                            exchangeButton(for: rarity)
                         }
                         .cardTile()
                     }
@@ -35,23 +33,5 @@ struct CollectionView: View {
             .padding(.top, 24)
         }
         .background(Color(.systemGroupedBackground).ignoresSafeArea())
-    }
-
-    // Bouton d'échange des doublons. La rareté la plus haute n'en a pas : rien n'est plus rare.
-    @ViewBuilder
-    private func exchangeButton(for rarity: Rarity) -> some View {
-        if let next = nextRarity(after: rarity) {
-            Button {
-                withAnimation {
-                    _ = collectionVM.exchange(rarity)
-                }
-            } label: {
-                Label("\(collectionVM.exchangeCost) → 1 \(next.name)", systemImage: "arrow.triangle.2.circlepath")
-                    .font(.system(size: 12, weight: .bold))
-            }
-            .buttonStyle(.borderedProminent)
-            .tint(next.color)
-            .disabled(!collectionVM.canExchange(rarity))
-        }
     }
 }

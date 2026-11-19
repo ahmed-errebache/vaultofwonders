@@ -31,12 +31,3 @@ func rarity(forRoll roll: Int) -> Rarity {
     }
     return allRarities[0]
 }
-
-// Rareté située juste au-dessus dans la liste, ou nil pour la plus rare (Mythique).
-func nextRarity(after rarity: Rarity) -> Rarity? {
-    guard let index = allRarities.firstIndex(where: { $0.name == rarity.name }) else {
-        return nil
-    }
-    let nextIndex = index + 1
-    return nextIndex < allRarities.count ? allRarities[nextIndex] : nil
-}
