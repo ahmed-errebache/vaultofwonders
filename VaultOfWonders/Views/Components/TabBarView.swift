@@ -3,6 +3,7 @@ import SwiftUI
 enum AppTab {
     case home
     case chance
+    case machine
     case collection
 }
 
@@ -13,6 +14,7 @@ struct TabBarView: View {
         HStack(spacing: 0) {
             navItem(tab: .chance,     title: "Chances",     systemImage: "dice.fill")
             navItem(tab: .home,       title: "Accueil",    systemImage: "house.fill")
+            navItem(tab: .machine,    title: "Distributeur",    systemImage: "gearshape.2.fill")
             navItem(tab: .collection, title: "Collection", systemImage: "square.stack.fill")
         }
         .padding(.horizontal, 18)
@@ -35,7 +37,7 @@ struct TabBarView: View {
                     if isSelected {
                         Capsule()
                             .fill(Color.blue.opacity(0.16))
-                            .frame(width: 112, height: 56)
+                            .frame(width: 76, height: 56)
                     } else {
                         Circle()
                             .fill(Color.gray.opacity(0.10))
