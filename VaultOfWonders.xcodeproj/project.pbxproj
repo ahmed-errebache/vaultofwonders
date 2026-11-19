@@ -6,8 +6,19 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXContainerItemProxy section */
+		7F00000000000000000000A7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 74633A7C2FC98FF000A86A1D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 74633A832FC98FF000A86A1D;
+			remoteInfo = VaultOfWonders;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		74633A842FC98FF000A86A1D /* VaultOfWonders.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VaultOfWonders.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7F00000000000000000000A1 /* VaultOfWondersTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VaultOfWondersTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -16,10 +27,22 @@
 			path = VaultOfWonders;
 			sourceTree = "<group>";
 		};
+		7F00000000000000000000A2 /* VaultOfWondersTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = VaultOfWondersTests;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		74633A812FC98FF000A86A1D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7F00000000000000000000A4 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -33,6 +56,7 @@
 			isa = PBXGroup;
 			children = (
 				74633A862FC98FF000A86A1D /* VaultOfWonders */,
+				7F00000000000000000000A2 /* VaultOfWondersTests */,
 				74633A852FC98FF000A86A1D /* Products */,
 			);
 			sourceTree = "<group>";
@@ -41,6 +65,7 @@
 			isa = PBXGroup;
 			children = (
 				74633A842FC98FF000A86A1D /* VaultOfWonders.app */,
+				7F00000000000000000000A1 /* VaultOfWondersTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -70,6 +95,29 @@
 			productReference = 74633A842FC98FF000A86A1D /* VaultOfWonders.app */;
 			productType = "com.apple.product-type.application";
 		};
+		7F00000000000000000000A6 /* VaultOfWondersTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7F00000000000000000000AB /* Build configuration list for PBXNativeTarget "VaultOfWondersTests" */;
+			buildPhases = (
+				7F00000000000000000000A3 /* Sources */,
+				7F00000000000000000000A4 /* Frameworks */,
+				7F00000000000000000000A5 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7F00000000000000000000A8 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				7F00000000000000000000A2 /* VaultOfWondersTests */,
+			);
+			name = VaultOfWondersTests;
+			packageProductDependencies = (
+			);
+			productName = VaultOfWondersTests;
+			productReference = 7F00000000000000000000A1 /* VaultOfWondersTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -82,6 +130,10 @@
 				TargetAttributes = {
 					74633A832FC98FF000A86A1D = {
 						CreatedOnToolsVersion = 26.3;
+					};
+					7F00000000000000000000A6 = {
+						CreatedOnToolsVersion = 26.3;
+						TestTargetID = 74633A832FC98FF000A86A1D;
 					};
 				};
 			};
@@ -100,12 +152,20 @@
 			projectRoot = "";
 			targets = (
 				74633A832FC98FF000A86A1D /* VaultOfWonders */,
+				7F00000000000000000000A6 /* VaultOfWondersTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		74633A822FC98FF000A86A1D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7F00000000000000000000A5 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -122,7 +182,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		7F00000000000000000000A3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		7F00000000000000000000A8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 74633A832FC98FF000A86A1D /* VaultOfWonders */;
+			targetProxy = 7F00000000000000000000A7 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		74633A8D2FC98FF100A86A1D /* Debug */ = {
@@ -268,7 +343,6 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
@@ -300,11 +374,52 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		7F00000000000000000000A9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = FX7FCNSX4N;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.VaultOfWonders.VaultOfWondersTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/VaultOfWonders.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/VaultOfWonders";
+			};
+			name = Debug;
+		};
+		7F00000000000000000000AA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = FX7FCNSX4N;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.VaultOfWonders.VaultOfWondersTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/VaultOfWonders.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/VaultOfWonders";
 			};
 			name = Release;
 		};
@@ -325,6 +440,15 @@
 			buildConfigurations = (
 				74633A902FC98FF100A86A1D /* Debug */,
 				74633A912FC98FF100A86A1D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7F00000000000000000000AB /* Build configuration list for PBXNativeTarget "VaultOfWondersTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7F00000000000000000000A9 /* Debug */,
+				7F00000000000000000000AA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
