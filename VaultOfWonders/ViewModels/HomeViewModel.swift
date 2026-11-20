@@ -1,4 +1,4 @@
-import SwiftUI
+import Foundation
 import Combine
 
 @MainActor
@@ -13,15 +13,32 @@ final class HomeViewModel: ObservableObject {
 
     private let drawer: RarityDrawing
 
-    // Moment où chaque carte se retourne, en secondes après son apparition,
+    // Moment où les cartes apparaissent après l'ouverture du coffre,
+    // moment où chaque carte se retourne (en secondes après son apparition),
     // puis moment où le bouton « Recevoir » s'affiche.
-    private let revealDelays = [0.5, 1.2, 2.2]
-    private let buttonDelay = 2.9
+    private let cardsAppearDelay: Double
+    private let revealDelays: [Double]
+    private let buttonDelay: Double
 
-    // Le tirage est injecté : l'application utilise le hasard par défaut,
-    // les tests passent un MockRarityDrawer pour choisir les cartes.
-    init(drawer: RarityDrawing = RandomRarityDrawer()) {
+    // Une ouverture de coffre donne une carte par délai de retournement :
+    // impossible de désynchroniser le nombre de cartes et le nombre de délais.
+    var packSize: Int {
+        revealDelays.count
+    }
+
+    // Le tirage et les délais sont injectés : l'application utilise le hasard
+    // et les durées par défaut, les tests passent un MockRarityDrawer pour
+    // choisir les cartes et des délais très courts pour aller vite.
+    init(
+        drawer: RarityDrawing = RandomRarityDrawer(),
+        cardsAppearDelay: Double = 2.0,
+        revealDelays: [Double] = [0.5, 1.2, 2.2],
+        buttonDelay: Double = 2.9
+    ) {
         self.drawer = drawer
+        self.cardsAppearDelay = cardsAppearDelay
+        self.revealDelays = revealDelays
+        self.buttonDelay = buttonDelay
     }
 
     // Dernière carte retournée, ou nil si aucune ne l'est encore.
@@ -34,11 +51,11 @@ final class HomeViewModel: ObservableObject {
     }
 
     func openPack() {
-        drawnCards = (0..<3).map { _ in drawer.drawRarity() }
+        drawnCards = (0..<packSize).map { _ in drawer.drawRarity() }
             .sorted { $0.percent > $1.percent }
         revealedCount = 0
         showPopup = true
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [weak self] in
+        DispatchQueue.main.asyncAfter(deadline: .now() + cardsAppearDelay) { [weak self] in
             self?.startReveal()
         }
     }
@@ -68,9 +85,7 @@ final class HomeViewModel: ObservableObject {
             }
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + buttonDelay) { [weak self] in
-            withAnimation(.easeIn(duration: 0.3)) {
-                self?.showButton = true
-            }
+            self?.showButton = true
         }
     }
 }

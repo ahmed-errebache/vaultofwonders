@@ -30,6 +30,7 @@ struct MachineView: View {
                 .shadow(color: .orange.opacity(0.4), radius: 14, y: 8)
             }
             .buttonStyle(MachineButtonStyle())
+            .accessibilityIdentifier("machineButton")
 
             Spacer()
         }
@@ -55,6 +56,10 @@ struct TokenCounter: View {
         .padding(.vertical, 10)
         .background(Capsule().fill(Color(.secondarySystemGroupedBackground)))
         .shadow(color: .black.opacity(0.08), radius: 8, x: 0, y: 3)
+        // Un seul élément d'accessibilité dont le libellé est le texte du compteur :
+        // les tests UI peuvent lire « 3 jetons » directement.
+        .accessibilityElement(children: .combine)
+        .accessibilityIdentifier("tokenCounter")
     }
 }
 

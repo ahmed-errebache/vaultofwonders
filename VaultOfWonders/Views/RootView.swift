@@ -26,9 +26,7 @@ struct RootView: View {
                     .fill(.ultraThinMaterial)
                     .ignoresSafeArea()
                     .transition(.opacity)
-            }
 
-            if homeVM.showPopup {
                 PackOpeningView(vm: homeVM) {
                     homeVM.collectCards(into: collectionVM)
                 }

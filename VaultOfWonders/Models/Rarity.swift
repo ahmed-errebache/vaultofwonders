@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct Rarity: Identifiable {
+struct Rarity: Identifiable, Equatable {
     let id = UUID()
     let name: String
     let percent: Int
@@ -10,6 +10,12 @@ struct Rarity: Identifiable {
     // Les raretés les plus difficiles à obtenir (5 % ou moins) ont droit à des effets spéciaux.
     var isSpecial: Bool {
         percent <= 5
+    }
+
+    // Deux cartes représentent la même rareté si elles portent le même nom.
+    // L'id, différent à chaque instance, est volontairement ignoré.
+    static func == (lhs: Rarity, rhs: Rarity) -> Bool {
+        lhs.name == rhs.name
     }
 }
 
