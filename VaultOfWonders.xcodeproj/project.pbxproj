@@ -6,6 +6,11 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		22C8C15A30B08C0800204F76 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 22C8C15930B08C0800204F76 /* FirebaseAuth */; };
+		22C8C15C30B08C0800204F76 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 22C8C15B30B08C0800204F76 /* FirebaseCore */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		2270BCCB30B03F1500BCCCEF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -59,6 +64,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				22C8C15C30B08C0800204F76 /* FirebaseCore in Frameworks */,
+				22C8C15A30B08C0800204F76 /* FirebaseAuth in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -135,6 +142,8 @@
 			);
 			name = VaultOfWonders;
 			packageProductDependencies = (
+				22C8C15930B08C0800204F76 /* FirebaseAuth */,
+				22C8C15B30B08C0800204F76 /* FirebaseCore */,
 			);
 			productName = VaultOfWonders;
 			productReference = 74633A842FC98FF000A86A1D /* VaultOfWonders.app */;
@@ -195,6 +204,9 @@
 			);
 			mainGroup = 74633A7B2FC98FF000A86A1D;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				22C8C15830B08C0800204F76 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 74633A852FC98FF000A86A1D /* Products */;
 			projectDirPath = "";
@@ -572,6 +584,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		22C8C15830B08C0800204F76 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 13.2.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		22C8C15930B08C0800204F76 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 22C8C15830B08C0800204F76 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		22C8C15B30B08C0800204F76 /* FirebaseCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 22C8C15830B08C0800204F76 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCore;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 74633A7C2FC98FF000A86A1D /* Project object */;
 }
