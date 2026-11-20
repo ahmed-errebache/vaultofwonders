@@ -35,7 +35,7 @@ struct MachineView: View {
         }
         .padding(.top, 24)
         .frame(maxWidth: .infinity)
-        .background(Color(.systemGray6).ignoresSafeArea())
+        .background(Color(.systemGroupedBackground).ignoresSafeArea())
     }
 }
 
@@ -53,7 +53,7 @@ struct TokenCounter: View {
         .font(.title3)
         .padding(.horizontal, 18)
         .padding(.vertical, 10)
-        .background(Capsule().fill(Color.white))
+        .background(Capsule().fill(Color(.secondarySystemGroupedBackground)))
         .shadow(color: .black.opacity(0.08), radius: 8, x: 0, y: 3)
     }
 }
