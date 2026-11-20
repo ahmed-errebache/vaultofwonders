@@ -1,4 +1,5 @@
 import SwiftUI
+import FirebaseCore
 
 @main
 struct VaultOfWondersApp: App {
@@ -8,6 +9,7 @@ struct VaultOfWondersApp: App {
     // Les tests UI lancent l'application avec l'argument « --reset » pour
     // repartir à chaque fois d'un état vierge (aucun jeton, collection vide).
     init() {
+        FirebaseApp.configure()
         if ProcessInfo.processInfo.arguments.contains("--reset") {
             UserDefaultsTokenStore().save(0)
             UserDefaultsCollectionStore().save([:])
@@ -16,7 +18,7 @@ struct VaultOfWondersApp: App {
 
     var body: some Scene {
         WindowGroup {
-            RootView()
+            ContentView()
                 .environmentObject(collectionVM)
                 .environmentObject(tokenVM)
         }

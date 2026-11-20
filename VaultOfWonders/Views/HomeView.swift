@@ -1,7 +1,9 @@
 import SwiftUI
+import FirebaseAuth
 
 struct HomeView: View {
     @ObservedObject var vm: HomeViewModel
+    @ObservedObject var authManager: AuthManager
     @EnvironmentObject var tokenVM: TokenViewModel
 
     var body: some View {
@@ -43,6 +45,21 @@ struct HomeView: View {
                         .padding(.top, 6)
                         .accessibilityIdentifier("missingTokensLabel")
                 }
+
+                // Compte connecté et déconnexion.
+                VStack(spacing: 4) {
+                    Text(authManager.user?.email ?? "Utilisateur inconnu")
+                        .font(.footnote)
+                        .foregroundColor(.secondary)
+                        .accessibilityIdentifier("userEmailLabel")
+
+                    Button("Se déconnecter") {
+                        authManager.signOut()
+                    }
+                    .font(.footnote)
+                    .accessibilityIdentifier("signOutButton")
+                }
+                .padding(.top, 20)
             }
 
             Spacer()

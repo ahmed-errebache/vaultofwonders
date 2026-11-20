@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct RootView: View {
+    // Créé par ContentView, transmis ici pour que l'accueil puisse déconnecter l'utilisateur.
+    @ObservedObject var authManager: AuthManager
     @EnvironmentObject var collectionVM: CollectionViewModel
     @StateObject private var homeVM = HomeViewModel()
     @State private var selectedTab: AppTab = .home
@@ -9,7 +11,7 @@ struct RootView: View {
         ZStack {
             VStack {
                 if selectedTab == .home {
-                    HomeView(vm: homeVM)
+                    HomeView(vm: homeVM, authManager: authManager)
                 } else if selectedTab == .chance {
                     ChanceView()
                 } else if selectedTab == .machine {

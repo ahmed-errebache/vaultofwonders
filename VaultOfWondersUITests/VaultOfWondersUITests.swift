@@ -26,8 +26,9 @@ final class VaultOfWondersUITests: XCTestCase {
 
         // « --reset » remet les jetons à zéro et vide la collection :
         // chaque test part du même état, quel que soit l'ordre d'exécution.
+        // « --skip-auth » saute l'écran de connexion Firebase.
         app = XCUIApplication()
-        app.launchArguments = ["--reset"]
+        app.launchArguments = ["--reset", "--skip-auth"]
         app.launch()
     }
 
@@ -94,7 +95,7 @@ final class VaultOfWondersUITests: XCTestCase {
 
         // Relance sans « --reset » : l'état sauvegardé doit être conservé.
         app.terminate()
-        app.launchArguments = []
+        app.launchArguments = ["--skip-auth"]
         app.launch()
 
         app.buttons["tab-machine"].tap()
