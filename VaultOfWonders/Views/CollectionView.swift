@@ -24,6 +24,7 @@ struct CollectionView: View {
                             Text("×\(count)")
                                 .font(.system(size: 20, weight: .bold))
                                 .foregroundColor(count > 0 ? rarity.color : .gray.opacity(0.4))
+                                .accessibilityIdentifier("collectionCount-\(rarity.name)")
                         }
                         .cardTile()
                     }

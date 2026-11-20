@@ -1,0 +1,10 @@
+# macOS
+.DS_Store
+
+# Xcode : état d'interface et réglages propres à chaque développeur
+xcuserdata/
+*.xcuserstate
+
+# Produits de compilation
+build/
+DerivedData/

@@ -16,6 +16,7 @@ struct PackOpeningView: View {
                         VStack(spacing: 6) {
                             FlipCardView(rarity: card, isFaceUp: vm.isRevealed(index: i))
                                 .frame(width: 85, height: 110)
+                                .accessibilityIdentifier("packCard\(i)")
 
                             // Le nom n'apparaît qu'une fois la carte retournée.
                             Text(card.name)
@@ -51,10 +52,13 @@ struct PackOpeningView: View {
                             .background(Color.orange)
                             .cornerRadius(12)
                     }
+                    .accessibilityIdentifier("collectButton")
                     .padding(.bottom, 60)
                 }
             }
         }
+        // Le bouton « Recevoir » apparaît en fondu.
+        .animation(.easeIn(duration: 0.3), value: vm.showButton)
         // Vibration à chaque carte retournée, plus marquée pour une carte spéciale.
         .sensoryFeedback(trigger: vm.revealedCount) { _, newCount in
             guard newCount > 0, let card = vm.lastRevealedCard else {

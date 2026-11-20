@@ -33,6 +33,7 @@ struct HomeView: View {
                         .cornerRadius(12)
                 }
                 .disabled(!tokenVM.canOpenChest)
+                .accessibilityIdentifier("openChestButton")
                 .padding(.top, 20)
 
                 if !tokenVM.canOpenChest {
@@ -40,6 +41,7 @@ struct HomeView: View {
                         .font(.footnote)
                         .foregroundColor(.secondary)
                         .padding(.top, 6)
+                        .accessibilityIdentifier("missingTokensLabel")
                 }
             }
 

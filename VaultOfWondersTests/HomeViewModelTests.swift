@@ -21,7 +21,7 @@ final class HomeViewModelTests: XCTestCase {
 
         viewModel.openPack()
 
-        XCTAssertEqual(viewModel.drawnCards.map { $0.name }, ["Rare", "Rare", "Rare"])
+        XCTAssertEqual(viewModel.drawnCards, [rare, rare, rare])
     }
 
     func testOpenPackSortsCardsFromMostCommonToRarest() {
@@ -29,7 +29,7 @@ final class HomeViewModelTests: XCTestCase {
 
         viewModel.openPack()
 
-        XCTAssertEqual(viewModel.drawnCards.map { $0.name }, ["Commune", "Rare", "Mythique"])
+        XCTAssertEqual(viewModel.drawnCards, [commune, rare, mythique])
     }
 
     func testOpenPackShowsPopupBeforeCardsAndButton() {
@@ -86,7 +86,7 @@ final class HomeViewModelTests: XCTestCase {
 
         XCTAssertTrue(viewModel.isRevealed(index: 0))
         XCTAssertFalse(viewModel.isRevealed(index: 1))
-        XCTAssertEqual(viewModel.lastRevealedCard?.name, "Commune")
+        XCTAssertEqual(viewModel.lastRevealedCard, commune)
     }
 
     func testLastRevealedCardFollowsTheReveal() {
@@ -97,7 +97,7 @@ final class HomeViewModelTests: XCTestCase {
         viewModel.revealNextCard()
         viewModel.revealNextCard()
 
-        XCTAssertEqual(viewModel.lastRevealedCard?.name, "Mythique")
+        XCTAssertEqual(viewModel.lastRevealedCard, mythique)
     }
 
     func testRevealNextCardNeverGoesPastTheDrawnCards() {
@@ -109,6 +109,26 @@ final class HomeViewModelTests: XCTestCase {
         }
 
         XCTAssertEqual(viewModel.revealedCount, 3)
+    }
+
+    // MARK: - Déroulement automatique
+
+    func testRevealSequenceShowsCardsRevealsThemThenShowsButton() async throws {
+        // Les délais injectés sont très courts : le test reste rapide.
+        let viewModel = HomeViewModel(
+            drawer: MockRarityDrawer(rarities: [commune, rare, mythique]),
+            cardsAppearDelay: 0.01,
+            revealDelays: [0.02, 0.03, 0.04],
+            buttonDelay: 0.05
+        )
+
+        viewModel.openPack()
+        // 0,5 s d'attente : tous les délais programmés sont largement passés.
+        try await Task.sleep(nanoseconds: 500_000_000)
+
+        XCTAssertTrue(viewModel.showCards)
+        XCTAssertEqual(viewModel.revealedCount, 3)
+        XCTAssertTrue(viewModel.showButton)
     }
 
     func testCollectCardsHidesRevealedCards() {

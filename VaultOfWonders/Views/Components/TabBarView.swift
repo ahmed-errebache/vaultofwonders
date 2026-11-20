@@ -1,6 +1,6 @@
 import SwiftUI
 
-enum AppTab {
+enum AppTab: String {
     case home
     case chance
     case machine
@@ -54,6 +54,7 @@ struct TabBarView: View {
             .frame(maxWidth: .infinity)
         }
         .buttonStyle(.plain)
+        .accessibilityIdentifier("tab-\(tab.rawValue)")
     }
 }
 
