@@ -1,4 +1,5 @@
 import SwiftUI
+import GoogleSignInSwift
 
 // Écran de connexion et de création de compte.
 struct AuthView: View {
@@ -54,6 +55,13 @@ struct AuthView: View {
                     authManager.signUp(email: email, password: password)
                 }
                 .accessibilityIdentifier("signUpButton")
+
+                // Bouton officiel fourni par Google.
+                GoogleSignInButton {
+                    authManager.signInWithGoogle()
+                }
+                .frame(height: 44)
+                .accessibilityIdentifier("googleSignInButton")
             }
             .padding()
         }

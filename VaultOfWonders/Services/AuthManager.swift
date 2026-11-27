@@ -1,6 +1,9 @@
 import Foundation
 import Combine
 import FirebaseAuth
+import FirebaseCore
+import GoogleSignIn
+import UIKit
 
 // Centralise toute la logique d'authentification Firebase.
 // Les vues observent cet objet et se mettent à jour quand l'état de connexion change.
@@ -34,6 +37,45 @@ final class AuthManager: ObservableObject {
         Task {
             do {
                 let result = try await Auth.auth().signIn(withEmail: email, password: password)
+                user = result.user
+                isAuthenticated = true
+                errorMessage = nil
+            } catch {
+                errorMessage = error.localizedDescription
+            }
+        }
+    }
+
+    // Connecte l'utilisateur avec son compte Google, puis transmet ce compte à Firebase.
+    func signInWithGoogle() {
+        Task {
+            do {
+                // L'identifiant client vient de GoogleService-Info.plist.
+                guard let clientID = FirebaseApp.app()?.options.clientID else {
+                    errorMessage = "Configuration Google introuvable."
+                    return
+                }
+                GIDSignIn.sharedInstance.configuration = GIDConfiguration(clientID: clientID)
+
+                // Google a besoin d'un écran sur lequel afficher le choix du compte.
+                guard let rootViewController = UIApplication.shared.rootViewController else {
+                    errorMessage = "Impossible d'afficher la connexion Google."
+                    return
+                }
+
+                let googleResult = try await GIDSignIn.sharedInstance.signIn(withPresenting: rootViewController)
+
+                guard let idToken = googleResult.user.idToken?.tokenString else {
+                    errorMessage = "Jeton Google manquant."
+                    return
+                }
+
+                // On échange les jetons Google contre une session Firebase.
+                let credential = GoogleAuthProvider.credential(
+                    withIDToken: idToken,
+                    accessToken: googleResult.user.accessToken.tokenString
+                )
+                let result = try await Auth.auth().signIn(with: credential)
                 user = result.user
                 isAuthenticated = true
                 errorMessage = nil
